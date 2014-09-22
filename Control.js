@@ -1,59 +1,69 @@
-Phaser.Plugin.Adventurer.Control = function(sprite,buttons){
+Phaser.Plugin.Adventurer.Control = function(game,player,buttons){
+	
+	this.game = game;
 	//Ned to erro out without a sprite
-	this.sprite = sprite || null;
+	this.player = player || this.game.adv.player;
 	this.buttons = buttons || {
 		//DO something here
 		up : 'up',
 		down: 'down',
 		left : 'left',
-		right:'right'
+		right:'right',
+		action : Phaser.Keyboard.SPACEBAR
 	}
 	
 	//This is not for tablets or phones yet
 	this.cursor = game.input.keyboard.createCursorKeys();
+	this.actionKey = game.input.keyboard.addKey(this.buttons.action);
+	this.actionKey.onDown.add(this.action, this);
 }
 
 Phaser.Plugin.Adventurer.Control.prototype.constructor = Phaser.Plugin.Adventurer.Control;
 
 Phaser.Plugin.Adventurer.Control.prototype = {
 	
+	action : function(){		
+		this.player.action();	
+	},
+	
 	move : function(){
-
-    var v = this.sprite.speed;
-	this.sprite.body.velocity.set(0);
+		
+    var v = this.player.speed;
+	this.player.body.velocity.set(0);
 	
     //Check for Angle
-    if(this.sprite.tileAngle){
+    if(this.player.tileAngle){
+		
 		/* 
 		 * 1= 45
 		 * 2 = 135
 		 */
-		// console.log(this.sprite.onTile);
-		this.sprite.lines  = null;
+		 
+		this.player.lines  = null;
 		//make the feelerLines
 		var fl = {
-			l : new Phaser.Line(this.sprite.x,this.sprite.y,this.sprite.x-150,this.sprite.y),
-			r : new Phaser.Line(this.sprite.x,this.sprite.y,this.sprite.x+150,this.sprite.y),
-			t: new Phaser.Line(this.sprite.x,this.sprite.y,this.sprite.x,this.sprite.y-150),
-			b : new Phaser.Line(this.sprite.x,this.sprite.y,this.sprite.x,this.sprite.y+150)
+			l : new Phaser.Line(this.player.x,this.player.y,this.player.x-150,this.player.y),
+			r : new Phaser.Line(this.player.x,this.player.y,this.player.x+150,this.player.y),
+			t: new Phaser.Line(this.player.x,this.player.y,this.player.x,this.player.y-150),
+			b : new Phaser.Line(this.player.x,this.player.y,this.player.x,this.player.y+150)
 		}
-		var al = this.sprite.onTile.angleLine;
+		var al = this.player.onTile.angleLine;
 	}
 	
   //LEFT
     if (this.cursor[this.buttons.left].isDown)  {
-		this.sprite.body.velocity.x = -1*v;
+		this.player.body.velocity.x = -1*v;
 		
-		if(this.sprite.onTile){
+		if(this.player.onTile){
 			if(al.intersects(fl.l) !== null) {
 				
-					if(this.sprite.tileAngle == 1){
-						this.sprite.body.velocity.x = (-1*v)/1.5;
-						this.sprite.body.velocity.y = (1*v)/1.5;
+					if(this.player.tileAngle == 1){
+						this.player.body.velocity.x = (-1*v)/1.5;
+						this.player.body.velocity.y = (1*v)/1.5;
 					}
-					if(this.sprite.tileAngle == 2){
-						this.sprite.body.velocity.x = (-1*v)/1.5;
-						this.sprite.body.velocity.y = (-1*v)/1.5;
+					if(this.player.tileAngle == 2){
+						this.player.body.velocity.x = (-1*v)/1.5;
+						this.player.body.velocity.y = (-1*v)/1.5;
 					}
 			}
 		}
@@ -61,18 +71,18 @@ Phaser.Plugin.Adventurer.Control.prototype = {
     
     //RIGHT
     if (this.cursor[this.buttons.right].isDown) {
-		this.sprite.body.velocity.x = v;
+		this.player.body.velocity.x = v;
 		
-		if(this.sprite.onTile){
+		if(this.player.onTile){
 			if(al.intersects(fl.r) !== null) {
 
-				if(this.sprite.tileAngle == 1){	
-					this.sprite.body.velocity.x = (1*v)/1.5;
-					this.sprite.body.velocity.y = (-1*v)/1.5;
+				if(this.player.tileAngle == 1){	
+					this.player.body.velocity.x = (1*v)/1.5;
+					this.player.body.velocity.y = (-1*v)/1.5;
 				}
-				if(this.sprite.tileAngle == 2){	
-					this.sprite.body.velocity.x = (1*v)/1.5;
-					this.sprite.body.velocity.y = (1*v)/1.5;
+				if(this.player.tileAngle == 2){	
+					this.player.body.velocity.x = (1*v)/1.5;
+					this.player.body.velocity.y = (1*v)/1.5;
 				}
 			}		
 		}
@@ -80,17 +90,17 @@ Phaser.Plugin.Adventurer.Control.prototype = {
     
     //UP
     if (this.cursor[this.buttons.up].isDown) {		
-		this.sprite.body.velocity.y = -1*v;
-		if(this.sprite.onTile){
+		this.player.body.velocity.y = -1*v;
+		if(this.player.onTile){
 			if(al.intersects(fl.t) !== null) {
-				if(this.sprite.tileAngle == 1 ) {
-					this.sprite.body.velocity.y = (-1*v)/1.5;
-					this.sprite.body.velocity.x = (1*v)/1.5;
+				if(this.player.tileAngle == 1 ) {
+					this.player.body.velocity.y = (-1*v)/1.5;
+					this.player.body.velocity.x = (1*v)/1.5;
 				}
 				
-				if(this.sprite.tileAngle == 2 ) {
-					this.sprite.body.velocity.y = (-1*v)/1.5;
-					this.sprite.body.velocity.x = (-1*v)/1.5;
+				if(this.player.tileAngle == 2 ) {
+					this.player.body.velocity.y = (-1*v)/1.5;
+					this.player.body.velocity.x = (-1*v)/1.5;
 				}
 			}
 		}
@@ -98,28 +108,26 @@ Phaser.Plugin.Adventurer.Control.prototype = {
     
     //DOWN
     if (this.cursor[this.buttons.down].isDown) {		
-		this.sprite.body.velocity.y = v;
+		this.player.body.velocity.y = v;
 		
-		if(this.sprite.onTile){
+		if(this.player.onTile){
 			if(al.intersects(fl.b) !== null) {
-				if(this.sprite.tileAngle == 1) {
-					this.sprite.body.velocity.y = (1*v)/1.5;
-					this.sprite.body.velocity.x = (-1*v)/1.5;
+				if(this.player.tileAngle == 1) {
+					this.player.body.velocity.y = (1*v)/1.5;
+					this.player.body.velocity.x = (-1*v)/1.5;
 				}
 				
-				if(this.sprite.tileAngle == 2) {
-					this.sprite.body.velocity.y = (1*v)/1.5;
-					this.sprite.body.velocity.x = (1*v)/1.5;
+				if(this.player.tileAngle == 2) {
+					this.player.body.velocity.y = (1*v)/1.5;
+					this.player.body.velocity.x = (1*v)/1.5;
 				}
 			}
 		}
     } 
-    //
     
-	//  this.sprite.going = false;
 	//TODO Don't know why but this is set here
-	this.sprite.tileAngle = null;
-	this.sprite.onTile = null;
+	this.player.tileAngle = null;
+	this.player.onTile = null;
 
 	}
 }
