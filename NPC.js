@@ -9,13 +9,16 @@ Phaser.Plugin.Adventurer.NPC = function(game,x,y, key,frame, name, speed, patrol
 	this.game.adv.npcs = this.game.adv.npcs || {};
 	this.patrol = patrol || null;
 	this.patrolIndex = 0;
-	this.gotoPoint = this.patrol[this.patrolIndex];
+	if(this.patrol){
+		this.gotoPoint = this.patrol[this.patrolIndex];
+	}
 	this.patrolling = false;
 	this.game.adv.player.nearNPCs = this.game.adv.player.nearNPCs || {};
 	this.game.adv.player.isSeen = this.game.adv.player.isSeen || {};
 	this.interact = function(){
 		console.log('interacting');
 	}
+	this.speed = speed || 150;
 	this.anchor.setTo(0.5,0.5);
 	this.vision = game.add.sprite(x,y,'vision');
 	this.vision.anchor.setTo(0, 0.5);
@@ -46,12 +49,12 @@ Phaser.Plugin.Adventurer.NPC.prototype.update = function(){
 			delete this.game.adv.player.nearNPCs[this.name];
 		}
 	}
-	
-	this.rotation = game.physics.arcade.angleToXY(this, this.gotoPoint[0],this.gotoPoint[1]);
-	this.vision.rotation = this.rotation;
-	this.vision.x = this.x;
-	this.vision.y = this.y;
-	
+	if(this.patrolling){
+		this.rotation = game.physics.arcade.angleToXY(this, this.gotoPoint[0],this.gotoPoint[1]);
+		this.vision.rotation = this.rotation;
+		this.vision.x = this.x;
+		this.vision.y = this.y;
+	}
 	if(this.vision.overlap(this.game.adv.player)){
 		this.game.adv.player.isSeen[this.name] = this;
 		this.whenSeePlayer();

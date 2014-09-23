@@ -34,9 +34,11 @@ Phaser.Plugin.Adventurer.Player.prototype.update = function(){
 		}
 	}
 	if(this._cache[0] != this.x || this._cache[1] != this.y){
-		//kill dialog on move for now
-		if(!this.game.adv.dialogueBox.hidden){
-			this.game.adv.dialogueBox.hide();
+		if(this.game.adv.dialogueBox){
+			//kill dialog on move for now
+			if(!this.game.adv.dialogueBox.hidden){
+				this.game.adv.dialogueBox.hide();
+			}
 		}
 	}
 };
@@ -117,10 +119,9 @@ Phaser.GameObjectCreator.prototype.advPlayer = function (x, y, key, frame) {
 
 Phaser.GameObjectFactory.prototype.advPlayer = function (x, y, key, frame, group) {
 
-    if (typeof group === 'undefined') {
+    if (!group) {
         group = this.world;
     }
-
     return group.add(new Phaser.Plugin.Adventurer.Player(this.game, x, y, key, frame));
 
 };
