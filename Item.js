@@ -6,6 +6,8 @@ Phaser.Plugin.Adventurer.Item = function(game,x,y, key,frame, name){
 	game.physics.arcade.enable(this);	
 	
 	this.game.adv.player.nearItems = this.game.adv.player.nearItems || {};
+	
+	this.anchor.setTo(0.5,0.5);
 
 	this.name = name || game.rnd.uuid();
 	this.game.adv.items = this.game.adv.items || {};
@@ -40,7 +42,7 @@ Phaser.GameObjectCreator.prototype.advItem = function (x, y, key, frame,name) {
 };
 
 
-Phaser.GameObjectFactory.prototype.advItem = function (x, y, key, frame, group) {
+Phaser.GameObjectFactory.prototype.advItem = function (x, y, key, frame, name,group) {
 
     if (typeof group === 'undefined') {
         group = this.world;

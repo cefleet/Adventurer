@@ -27,7 +27,12 @@ Phaser.Plugin.Adventurer.Control.prototype = {
 	},
 	
 	move : function(){
-		
+	 this.player.going = {
+		left : false,
+		right : false,
+		up: false,
+		down: false
+	};
     var v = this.player.speed;
 	this.player.body.velocity.set(0);
 	
@@ -53,7 +58,7 @@ Phaser.Plugin.Adventurer.Control.prototype = {
   //LEFT
     if (this.cursor[this.buttons.left].isDown)  {
 		this.player.body.velocity.x = -1*v;
-		
+		this.player.going.left = true;
 		if(this.player.onTile){
 			if(al.intersects(fl.l) !== null) {
 				
@@ -72,7 +77,8 @@ Phaser.Plugin.Adventurer.Control.prototype = {
     //RIGHT
     if (this.cursor[this.buttons.right].isDown) {
 		this.player.body.velocity.x = v;
-		
+		this.player.going.right = true;
+
 		if(this.player.onTile){
 			if(al.intersects(fl.r) !== null) {
 
@@ -91,6 +97,8 @@ Phaser.Plugin.Adventurer.Control.prototype = {
     //UP
     if (this.cursor[this.buttons.up].isDown) {		
 		this.player.body.velocity.y = -1*v;
+		this.player.going.up = true;
+
 		if(this.player.onTile){
 			if(al.intersects(fl.t) !== null) {
 				if(this.player.tileAngle == 1 ) {
@@ -109,6 +117,7 @@ Phaser.Plugin.Adventurer.Control.prototype = {
     //DOWN
     if (this.cursor[this.buttons.down].isDown) {		
 		this.player.body.velocity.y = v;
+		this.player.going.down = true;
 		
 		if(this.player.onTile){
 			if(al.intersects(fl.b) !== null) {

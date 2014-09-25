@@ -8,9 +8,12 @@ Phaser.Plugin.Adventurer.Trigger = function(game,x,y, key,frame,name){
 	this.name = name || game.rnd.uuid();
 	this.game.adv.triggers = this.game.adv.triggers || {};
 	this.game.adv.player.nearTriggers = this.game.adv.player.nearTrigers || {};
+	this.touchInteraction = false; //
+	this.interactDistance = 60;
 	this.action = function(){
 		console.log('The Trigger Has Been Pressed!');
 	}
+	this.anchor.setTo(0.5,0.5);
 }
 
 Phaser.Plugin.Adventurer.Trigger.prototype = Object.create(Phaser.Sprite.prototype);
@@ -20,8 +23,11 @@ Phaser.Plugin.Adventurer.Trigger.prototype.constructor = Phaser.Plugin.Adventure
 Phaser.Plugin.Adventurer.Trigger.prototype.update = function(){
 	//This is going to be a little different. Need to check for overlapping here.
 	this.distToPlayer = game.physics.arcade.distanceBetween(this.game.adv.player, this);
-	if(this.distToPlayer < 60){		
+	if(this.distToPlayer < this.interactDistance){		
 		this.game.adv.player.nearTriggers[this.name] = this;
+		if(this.touchInteraction){
+			this.action();
+		}
 	} else {
 		if(this.game.adv.player.nearTriggers[this.name]){
 			delete this.game.adv.player.nearTriggers[this.name];

@@ -9,7 +9,7 @@ Phaser.Plugin.Adventurer.Player = function(game,x,y, key,frame, speed, controls)
 	game.camera.follow(this);
 	game.physics.arcade.enable(this);
 	
-	this.speed = speed || 500;
+	this.speed = speed || 100;
 	this.name = name || 'player';
 	this.anchor.setTo(0.5,0.5);
 	
@@ -23,8 +23,8 @@ Phaser.Plugin.Adventurer.Player.prototype.update = function(){
 	this.controls.move();
 	
 	if(this.item){
-		item.x = this.x;
-		item.y = this.y-10;
+		this.item.x = this.x;
+		this.item.y = this.y-10;
 	}
 	
 	for(var layer in this.game.adv.tilemap.advLayers){
@@ -47,7 +47,7 @@ Phaser.Plugin.Adventurer.Player.prototype.action = function(){
 	
 	if(this.item){
 		this.throwItem();
-	} else if ( Object.keys(this.nearItems).length !== 0) { 
+	} else if (this.nearItems && Object.keys(this.nearItems).length !== 0) { 
 		var closest;
 		for(var it in this.nearItems){
 			if(!closest || this.nearItems[it].distToPlayer < closest.distToPlayer){
@@ -56,7 +56,7 @@ Phaser.Plugin.Adventurer.Player.prototype.action = function(){
 		}
 		this.pickupItem(closest);
 		
-	} else if (Object.keys(this.nearTriggers).length !== 0){
+	} else if (this.nearTriggers && Object.keys(this.nearTriggers).length !== 0){
 		var closestT;
 		for(var it in this.nearTriggers){
 			if(!closestT || this.nearTriggers[it].distToPlayer < closestT.distToPlayer){
@@ -82,12 +82,13 @@ Phaser.Plugin.Adventurer.Player.prototype.action = function(){
 Phaser.Plugin.Adventurer.Player.prototype.throwItem = function(){
 	var t = game.add.tween(this.item);
 	var b = game.add.tween(this.item);
-	var b1 = game.add.tween(this.item);
-	this.item = null;
-	b.to({y:item.y-50}, 300, Phaser.Easing.Cubic.Out);
-	b1.to({y:item.y}, 500, Phaser.Easing.Bounce.Out);
-	t.to({x : item.x+300}, 1000, Phaser.Easing.Cubic.Out);
+	var b1 = game.add.tween(this.item);	
+//Make this directional
+	b.to({y:this.item.y-50}, 300, Phaser.Easing.Cubic.Out);
+	b1.to({y:this.item.y}, 500, Phaser.Easing.Bounce.Out);
+	t.to({x : this.item.x-300}, 1000, Phaser.Easing.Cubic.Out);
 	
+	this.item = null;
 	b.chain(b1);
 	b.start();
 	t.start();

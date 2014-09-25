@@ -16,13 +16,16 @@ Phaser.Plugin.Adventurer.AdvTilemap.prototype._init = function(options){
 	
 	//creates the layers
 	for(var i =0; i < options.layers.length; i++){
+		
 		var l = options.layers[i];
+		if(l.altTileset){
+			this.addTilesetImage(l.altTileset, l.altImg);	
+		}
 		this.advLayers[l.name] = this.createLayer(l.name);
 
 		//adds standard collision
 		if(l.collisions){
 			this.setCollision(l.collisions,true,this.advLayers[l.name]);
-			this.advLayers[l.name].debug = true;
 			this.advLayers[l.name].advCollision = true;
 		};
 		

@@ -15,6 +15,8 @@ Phaser.Plugin.Adventurer.NPC = function(game,x,y, key,frame, name, speed, patrol
 	this.patrolling = false;
 	this.game.adv.player.nearNPCs = this.game.adv.player.nearNPCs || {};
 	this.game.adv.player.isSeen = this.game.adv.player.isSeen || {};
+	this.interactDistance = 60;
+	this.touchInteraction = false; //Does overlapping or getting really close cause the interaction
 	this.interact = function(){
 		console.log('interacting');
 	}
@@ -42,16 +44,19 @@ Phaser.Plugin.Adventurer.NPC.prototype.update = function(){
 	}
 	
 	this.distToPlayer = game.physics.arcade.distanceBetween(this.game.adv.player, this);
-	if(this.distToPlayer < 60){		
+	if(this.distToPlayer < this.interactDistance){		
 		this.game.adv.player.nearNPCs[this.name] = this;
+		if(this.touchInteraction){
+			this.interact();
+		}
 	} else {
 		if(this.game.adv.player.nearNPCs[this.name]){
 			delete this.game.adv.player.nearNPCs[this.name];
 		}
 	}
 	if(this.patrolling){
-		this.rotation = game.physics.arcade.angleToXY(this, this.gotoPoint[0],this.gotoPoint[1]);
-		this.vision.rotation = this.rotation;
+		this.rotation = game.physics.arcade.angleToXY(this, this.gotoPoint[0],this.gotoPoint[1])+ game.math.degToRad(270);
+		this.vision.rotation = this.rotation+ game.math.degToRad(90);
 		this.vision.x = this.x;
 		this.vision.y = this.y;
 	}
