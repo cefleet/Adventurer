@@ -33,6 +33,8 @@ Phaser.Plugin.Adventurer.Player.prototype.update = function(){
 			game.physics.arcade.collide(this, l);
 		}
 	}
+	/*
+	 * Don't Delete this but I'm gonna use it sometime
 	if(this._cache[0] != this.x || this._cache[1] != this.y){
 		if(this.game.adv.dialogueBox){
 			//kill dialog on move for now
@@ -40,23 +42,14 @@ Phaser.Plugin.Adventurer.Player.prototype.update = function(){
 				this.game.adv.dialogueBox.hide();
 			}
 		}
-	}
+	}*/
 };
 
 Phaser.Plugin.Adventurer.Player.prototype.action = function(){
 	
-	if(this.item){
-		this.throwItem();
-	} else if (this.nearItems && Object.keys(this.nearItems).length !== 0) { 
-		var closest;
-		for(var it in this.nearItems){
-			if(!closest || this.nearItems[it].distToPlayer < closest.distToPlayer){
-				closest = this.nearItems[it];
-			}
-		}
-		this.pickupItem(closest);
+	
 		
-	} else if (this.nearTriggers && Object.keys(this.nearTriggers).length !== 0){
+	if (this.nearTriggers && Object.keys(this.nearTriggers).length !== 0){
 		var closestT;
 		for(var it in this.nearTriggers){
 			if(!closestT || this.nearTriggers[it].distToPlayer < closestT.distToPlayer){
@@ -75,6 +68,17 @@ Phaser.Plugin.Adventurer.Player.prototype.action = function(){
 		}
 		//interact
 		this.interactNPC(closestN);	
+	} else if(this.item){
+		this.putdownItem();
+	} else if (this.nearItems && Object.keys(this.nearItems).length !== 0) { 
+		var closest;
+		for(var it in this.nearItems){
+			if(!closest || this.nearItems[it].distToPlayer < closest.distToPlayer){
+				closest = this.nearItems[it];
+			}
+		}
+		this.pickupItem(closest);
+		
 	}	
 }
 
@@ -92,6 +96,10 @@ Phaser.Plugin.Adventurer.Player.prototype.throwItem = function(){
 	b.chain(b1);
 	b.start();
 	t.start();
+}
+
+Phaser.Plugin.Adventurer.Player.prototype.putdownItem = function(){
+	this.item = null;
 }
 
 Phaser.Plugin.Adventurer.Player.prototype.pickupItem = function(item){

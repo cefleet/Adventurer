@@ -23,7 +23,11 @@ Phaser.Plugin.Adventurer.Control.prototype.constructor = Phaser.Plugin.Adventure
 Phaser.Plugin.Adventurer.Control.prototype = {
 	
 	action : function(){		
-		this.player.action();	
+		if(this.game.adv.openDialogue){
+			this.game.adv.dialogueBox.next();
+		} else {
+			this.player.action();	
+		}
 	},
 	
 	move : function(){
@@ -36,6 +40,7 @@ Phaser.Plugin.Adventurer.Control.prototype = {
     var v = this.player.speed;
 	this.player.body.velocity.set(0);
 	
+	if(!this.game.adv.openDialogue){
     //Check for Angle
     if(this.player.tileAngle){
 		
@@ -137,6 +142,6 @@ Phaser.Plugin.Adventurer.Control.prototype = {
 	//TODO Don't know why but this is set here
 	this.player.tileAngle = null;
 	this.player.onTile = null;
-
+	}
 	}
 }
