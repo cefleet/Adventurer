@@ -11,6 +11,26 @@ Phaser.Plugin.Adventurer.Item = function(game,x,y, key,frame, name){
 
 	this.name = name || game.rnd.uuid();
 	this.game.adv.items = this.game.adv.items || {};
+	//TODO make this x,y please
+	this.held = {
+		left : {
+			rotation : 0,
+			position : [-16,-4]
+		},		
+		right : {
+			rotation : 180,
+			position : [24,-4],
+			
+		},
+		up : {
+			position : [0,0],
+			rotation : 90
+		},
+		down : {
+			position : [0,16],
+			rotation : 270
+		}
+	}
 
 }
 

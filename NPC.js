@@ -22,7 +22,8 @@ Phaser.Plugin.Adventurer.NPC = function(game,x,y, key,frame, name, speed, patrol
 	}
 	this.speed = speed || 150;
 	this.anchor.setTo(0.5,0.5);
-	this.vision = game.add.sprite(x,y,'vision');
+	this.hasVision = false;
+	this.vision = game.add.sprite(-200,-200,'vision');
 	this.vision.anchor.setTo(0, 0.5);
 	this.whenSeePlayer = function(){};
 }
@@ -56,9 +57,11 @@ Phaser.Plugin.Adventurer.NPC.prototype.update = function(){
 	}
 	if(this.patrolling){
 		this.rotation = game.physics.arcade.angleToXY(this, this.gotoPoint[0],this.gotoPoint[1])+ game.math.degToRad(270);
-		this.vision.rotation = this.rotation+ game.math.degToRad(90);
-		this.vision.x = this.x;
-		this.vision.y = this.y;
+		if(this.hasVision){
+			this.vision.rotation = this.rotation+ game.math.degToRad(90);
+			this.vision.x = this.x;
+			this.vision.y = this.y;
+		}
 	}
 	if(this.vision.overlap(this.game.adv.player)){
 		this.game.adv.player.isSeen[this.name] = this;

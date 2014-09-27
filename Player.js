@@ -21,12 +21,28 @@ Phaser.Plugin.Adventurer.Player.prototype.constructor = Phaser.Plugin.Adventurer
 //The update function. No need to call it it does it by itself!
 Phaser.Plugin.Adventurer.Player.prototype.update = function(){
 	this.controls.move();
-	
+	for(var g in this.going){
+		if(this.going[g]){
+			if(this.item){
+				this.item.x = this.x + this.item.held[g].position[0];
+				this.item.y = this.y + this.item.held[g].position[1];
+				this.item.rotation = game.math.degToRad(this.item.held[g].rotation);
+				if(g === 'down'){
+					this.item.bringToTop();
+				} else {
+					this.bringToTop(); //this will mess up the layering
+					
+				}
+			}
+		}
+	}	
+	/*
 	if(this.item){
 		this.item.x = this.x;
 		this.item.y = this.y-10;
 	}
-	
+	*/
+	//
 	for(var layer in this.game.adv.tilemap.advLayers){
 		var l =  this.game.adv.tilemap.advLayers[layer];
 		if(l.advCollision){
